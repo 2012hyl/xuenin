@@ -793,6 +793,42 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
   .site-head__in{height:64px}
 }
 </style>
+<style id="notes-css">
+/* ---------- 06 留言 ---------- */
+.notes{padding:clamp(64px,9vw,120px) 0 clamp(48px,6vw,84px);border-top:1px solid var(--line)}
+.notes__head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap;margin-bottom:clamp(30px,4.6vw,56px)}
+.notes__title{font-family:var(--serif);font-size:clamp(34px,4.6vw,62px);line-height:1.18;font-weight:400;letter-spacing:.02em}
+.notes__title em{font-style:normal;color:var(--rust)}
+.notes__meta{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;padding-bottom:8px}
+.notes__body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:clamp(32px,5vw,72px);align-items:start}
+.notes__list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.notes__item{display:grid;gap:7px;padding:19px 0;border-bottom:1px solid var(--line)}
+.notes__who{display:flex;justify-content:space-between;gap:16px;font-family:var(--mono);font-size:9.5px;letter-spacing:.17em;color:var(--muted);text-transform:uppercase}
+.notes__text{font-size:15.5px;line-height:1.85;color:var(--ink-2);white-space:pre-wrap;word-break:break-word}
+.notes__empty{font-size:14px;line-height:1.8;color:var(--muted);border-bottom:1px solid var(--line);padding:19px 0;margin:0}
+.notes__form{position:relative;display:grid;grid-template-columns:1fr;gap:20px;align-items:end}
+.notes__field{display:grid;gap:7px;min-width:0}
+.notes__field span{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--muted)}
+.notes__field input,.notes__field textarea{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);padding:8px 0;font:inherit;font-size:15px;line-height:1.7;color:var(--ink);resize:none;outline:none;border-radius:0;transition:border-color .35s var(--ease)}
+.notes__field input:focus,.notes__field textarea:focus{border-bottom-color:var(--ink)}
+.notes__field ::placeholder{color:var(--muted);opacity:.7}
+.notes__field--wide{grid-column:1/-1}
+.notes__form button{justify-self:start;background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:13px 26px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease)}
+.notes__form button:hover:not(:disabled){background:transparent;color:var(--ink)}
+.notes__form button:disabled{background:transparent;border-color:var(--line);color:var(--muted);cursor:not-allowed}
+.notes__status{grid-column:1/-1;margin:0;min-height:1em;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--muted)}
+.notes__status.is-err{color:var(--rust)}
+.notes__honey{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+.notes__off{display:none;margin:0;font-size:13.5px;line-height:1.9;color:var(--muted)}
+.notes.is-off .notes__form,.notes.is-off .notes__empty,.notes.is-off .notes__list{display:none}
+.notes.is-off .notes__body{grid-template-columns:1fr}
+.notes.is-off .notes__off{display:block}
+.notes.is-off .notes__countwrap{display:none}
+@media (max-width:860px){
+  .notes__body{grid-template-columns:1fr;gap:36px}
+  .notes__meta{font-size:9px}
+}
+</style>
 </head>
 <body>
 
@@ -820,6 +856,7 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
       <a href="#film">影像</a>
       <a href="#sound">声音</a>
       <a href="#outro">尾声</a>
+      <a href="#notes">留言</a>
     </nav>
     <div class="head-meta">
       <span class="live" aria-hidden="true"></span>
@@ -1104,17 +1141,53 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
           <p class="outro__whisper">（好想喝奶茶，3分甜~）</p>
         </div>
       </div>
-
-      <footer class="foot">
-        <span>© 2026 江雪凝 · DESIGNED BY HYL</span>
-        <span>SHANGHAI · CHINA · <span id="clockFoot">--:--</span></span>
-        <span>WINTER ARCHIVE · 2026</span>
-      </footer>
     </div>
   </section>
+
+  <!-- ================= NOTES ================= -->
+  <section class="notes" id="notes" aria-labelledby="notesTitle">
+    <div class="wrap">
+      <div class="notes__head">
+        <div>
+          <p class="sec-head__no" style="border-top:1px solid var(--line);padding-top:18px"><b>06</b> — NOTES / 留言</p>
+          <h2 class="notes__title" id="notesTitle">不必寒暄，<br><em>说一句就好</em>。</h2>
+        </div>
+        <p class="notes__meta">NO LOGIN <span class="notes__countwrap">· <span id="notesCount">0</span> 条留言</span> · CLOUDFLARE D1</p>
+      </div>
+
+      <div class="notes__body">
+        <ol class="notes__list" id="notesList" aria-live="polite"></ol>
+        <p class="notes__empty" id="notesEmpty">还没有留言。你可以是第一句。</p>
+
+        <form class="notes__form" id="notesForm" autocomplete="off" novalidate>
+          <label class="notes__field">
+            <span>名字</span>
+            <input id="notesName" name="name" maxlength="20" placeholder="随便填" autocomplete="off">
+          </label>
+          <label class="notes__field notes__field--wide">
+            <span>留言</span>
+            <textarea id="notesBody" name="body" rows="2" maxlength="500" placeholder="不超过 500 字"></textarea>
+          </label>
+          <input type="text" id="notesHoney" name="honey" tabindex="-1" aria-hidden="true" class="notes__honey" autocomplete="off">
+          <button type="submit" id="notesSubmit" disabled>写下 →</button>
+          <p class="notes__status" id="notesStatus" aria-live="polite"></p>
+        </form>
+
+        <p class="notes__off" id="notesOff">留言板正在接通 Cloudflare D1，稍后开放。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <footer class="foot">
+      <span>© 2026 江雪凝 · DESIGNED BY HYL</span>
+      <span>SHANGHAI · CHINA · <span id="clockFoot">--:--</span></span>
+      <span>WINTER ARCHIVE · 2026</span>
+    </footer>
+  </div>
 </main>
 
-<!-- ================= LIGHTBOX ================= -->
+  <!-- ================= LIGHTBOX ================= -->
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="照片放大查看">
   <button class="lb__close" id="lbClose" aria-label="关闭">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -1341,6 +1414,104 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
       });
     }
   }
+})();
+</script>
+<script>
+/* ================= 06 NOTES（Cloudflare Workers + D1） ================= */
+(function(){
+  var API = ''; // 部署完 Worker 后把地址填在这里，例如 https://xuenin-notes.xxx.workers.dev
+  var sec = document.getElementById('notes');
+  if(!sec) return;
+  var list = document.getElementById('notesList');
+  var empty = document.getElementById('notesEmpty');
+  var count = document.getElementById('notesCount');
+  var form = document.getElementById('notesForm');
+  var nameEl = document.getElementById('notesName');
+  var bodyEl = document.getElementById('notesBody');
+  var honey = document.getElementById('notesHoney');
+  var btn = document.getElementById('notesSubmit');
+  var status = document.getElementById('notesStatus');
+  var page = '/';
+  var loaded = [];
+
+  if(!API){ sec.classList.add('is-off'); return; }
+  sec.classList.remove('is-off');
+
+  function ago(iso){
+    var t = new Date(iso).getTime();
+    if(!t) return '';
+    var d = Math.floor((Date.now() - t) / 1000);
+    if(d < 60) return '刚刚';
+    if(d < 3600) return Math.floor(d / 60) + ' 分钟前';
+    if(d < 86400) return Math.floor(d / 3600) + ' 小时前';
+    if(d < 86400 * 30) return Math.floor(d / 86400) + ' 天前';
+    return iso.slice(0, 10).replace(/-/g, '.');
+  }
+
+  function render(items){
+    loaded = items || [];
+    list.innerHTML = '';
+    loaded.forEach(function(c){
+      var li = document.createElement('li');
+      li.className = 'notes__item';
+      var who = document.createElement('div');
+      who.className = 'notes__who';
+      var n = document.createElement('span'); n.textContent = c.name;
+      var t = document.createElement('span'); t.textContent = ago(c.created_at);
+      who.appendChild(n); who.appendChild(t);
+      var p = document.createElement('p');
+      p.className = 'notes__text'; p.textContent = c.body;
+      li.appendChild(who); li.appendChild(p);
+      list.appendChild(li);
+    });
+    empty.style.display = loaded.length ? 'none' : '';
+    count.textContent = loaded.length;
+  }
+
+  function setStatus(msg, err){
+    status.textContent = msg || '';
+    status.classList.toggle('is-err', !!err);
+  }
+
+  function refresh(){
+    fetch(API + '/?page=' + encodeURIComponent(page), { cache: 'no-store' })
+      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(render)
+      .catch(function(){ setStatus('留言加载失败，稍后再试。', true); });
+  }
+
+  bodyEl.addEventListener('input', function(){
+    btn.disabled = !API || !bodyEl.value.trim();
+  });
+  nameEl.addEventListener('input', function(){
+    btn.disabled = !API || !bodyEl.value.trim();
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var body = bodyEl.value.trim();
+    var name = (nameEl.value.trim() || '匿名').slice(0, 20);
+    if(!body){ return; }
+    btn.disabled = true;
+    setStatus('正在写入…');
+    fetch(API + '/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: page, name: name, body: body, honey: honey.value })
+    }).then(function(r){
+      if(!r.ok) throw new Error(r.status);
+      bodyEl.value = '';
+      setStatus('写好了。');
+      setTimeout(function(){ setStatus(''); }, 2600);
+      refresh();
+    }).catch(function(){
+      setStatus('没写进去，检查一下网络或字数。', true);
+    }).then(function(){
+      btn.disabled = !bodyEl.value.trim();
+    });
+  });
+
+  refresh();
 })();
 </script>
 </body>
