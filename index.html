@@ -1419,7 +1419,7 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
 <script>
 /* ================= 06 NOTES（Cloudflare Workers + D1） ================= */
 (function(){
-  var API = 'https://xuenin-notes-api.pages.dev'; // Cloudflare Pages Functions + D1
+  var API = 'https://xuenin-notes-api.pages.dev/api/comments'; // Cloudflare Pages Functions + D1
   var sec = document.getElementById('notes');
   if(!sec) return;
   var list = document.getElementById('notesList');
@@ -1474,7 +1474,7 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
   }
 
   function refresh(){
-    fetch(API + '/?page=' + encodeURIComponent(page), { cache: 'no-store' })
+    fetch(API + '?page=' + encodeURIComponent(page), { cache: 'no-store' })
       .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
       .then(render)
       .catch(function(){ setStatus('留言加载失败，稍后再试。', true); });
@@ -1494,7 +1494,7 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
     if(!body){ return; }
     btn.disabled = true;
     setStatus('正在写入…');
-    fetch(API + '/', {
+    fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: page, name: name, body: body, honey: honey.value })
