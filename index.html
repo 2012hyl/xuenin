@@ -1419,7 +1419,7 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
 <script>
 /* ================= 06 NOTES（Cloudflare Workers + D1） ================= */
 (function(){
-  var API = ''; // 部署完 Worker 后把地址填在这里，例如 https://xuenin-notes.xxx.workers.dev
+  var API = 'https://xuenin-notes-api.pages.dev'; // Cloudflare Pages Functions + D1
   var sec = document.getElementById('notes');
   if(!sec) return;
   var list = document.getElementById('notesList');
