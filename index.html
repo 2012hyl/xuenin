@@ -1489,18 +1489,30 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
       .catch(function(){ setStatus('留言加载失败，稍后再试。', true); });
   }
 
-  bodyEl.addEventListener('input', function(){
-    btn.disabled = !API || !bodyEl.value.trim();
-  });
-  nameEl.addEventListener('input', function(){
-    btn.disabled = !API || !bodyEl.value.trim();
-  });
+  var cool = 0, coolTimer = null;
+  function startCool(){
+    cool = Date.now() + 21000;
+    if(coolTimer) clearTimeout(coolTimer);
+    coolTimer = setTimeout(function(){ cool = 0; syncBtn(); }, 21000);
+  }
+  function syncBtn(){
+    var waiting = Date.now() < cool;
+    btn.disabled = !API || waiting || !bodyEl.value.trim();
+    btn.textContent = waiting ? '稍后 ··' : '写下 →';
+  }
+
+  bodyEl.addEventListener('input', syncBtn);
+  nameEl.addEventListener('input', syncBtn);
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
     var body = bodyEl.value.trim();
     var name = (nameEl.value.trim() || '匿名').slice(0, 20);
     if(!body){ return; }
+    if(Date.now() < cool){
+      setStatus('刚写完一句，过 20 秒再写下一句。', true);
+      return;
+    }
     btn.disabled = true;
     setStatus('正在写入…');
     fetch(API, {
@@ -1508,17 +1520,23 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: page, name: name, body: body, honey: honey.value })
     }).then(function(r){
-      if(!r.ok) throw new Error(r.status);
+      if(r.status === 429){
+        startCool();
+        setStatus('写太快了，20 秒后再来一句。', true);
+        return;
+      }
+      if(!r.ok){ throw new Error(r.status); }
       bodyEl.value = '';
+      startCool();
       setStatus('写好了。');
       setTimeout(function(){ setStatus(''); }, 2600);
       refresh();
     }).catch(function(){
-      setStatus('没写进去，检查一下网络或字数。', true);
-    }).then(function(){
-      btn.disabled = !bodyEl.value.trim();
-    });
+      setStatus('没写进去，检查一下网络再试。', true);
+    }).then(syncBtn);
   });
+
+  syncBtn();
 
   refresh();
 })();
