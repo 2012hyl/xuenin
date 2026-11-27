@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#eff0ee">
+<title>后台 · 江雪凝</title>
+<style>
+  :root{
+    --paper:#eff0ee;--paper-2:#e6e8e5;--white:#f9faf8;
+    --ink:#0e1315;--ink-2:#283136;--muted:#79827f;
+    --ice:#4d6f80;--ice-d:#2e4a57;--line:rgba(14,19,21,.16);--line-soft:rgba(14,19,21,.09);
+    --serif:'Xue Serif','Noto Serif SC','Songti SC','SimSun',serif;
+    --sans:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font:15px/1.75 var(--sans);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .bar{position:sticky;top:0;z-index:5;background:rgba(239,240,238,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .bar__in{max-width:1080px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+  .brand__mark{width:30px;height:30px;display:grid;place-items:center;background:var(--ink);color:var(--paper);font-family:var(--serif);font-size:15px}
+  .brand__name{font-family:var(--serif);font-size:14px;letter-spacing:.04em}
+  .brand__sub{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+  .bar__sp{flex:1}
+  .ghost{border:1px solid var(--line);background:transparent;color:var(--ink);padding:7px 14px;font:11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+  .ghost:hover{border-color:var(--ink)}
+  main{max-width:1080px;margin:0 auto;padding:40px 24px 80px}
+  .kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;color:var(--muted);text-transform:uppercase}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4.4vw,44px);line-height:1.2;letter-spacing:.02em;margin:8px 0 0}
+  h1 em{font-style:normal;color:var(--ice)}
+  .login{max-width:420px;margin:9vh auto 0}
+  .login p{color:var(--muted);font-size:13.5px;margin:14px 0 28px}
+  .field{display:block;margin-bottom:22px}
+  .field span{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+  input{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;padding:10px 0;font:16px/1.4 var(--sans);color:var(--ink);outline:none}
+  input:focus{border-bottom-color:var(--ink)}
+  .primary{width:100%;border:1px solid var(--ink);background:var(--ink);color:var(--paper);padding:13px 16px;font:12px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+  .primary:disabled{opacity:.45;cursor:default}
+  .hint{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--muted);margin-top:14px;min-height:16px}
+  .hint.is-err{color:#a8432c}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);margin:34px 0 14px}
+  .stat{background:var(--paper);padding:18px 18px 16px}
+  .stat b{display:block;font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.1;margin-top:6px}
+  .stat small{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+  .spark{display:flex;align-items:flex-end;gap:3px;height:34px;margin:6px 0 0}
+  .spark i{flex:1;background:var(--ice);opacity:.55;min-height:2px}
+  .spark i:last-child{opacity:1}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;margin:44px 0 6px;padding-top:14px;border-top:1px solid var(--line)}
+  .list{list-style:none;margin:0;padding:0}
+  .row{display:grid;grid-template-columns:150px 1fr auto;gap:18px;align-items:start;padding:18px 0;border-bottom:1px solid var(--line-soft)}
+  .row__who{font-size:13px}
+  .row__who b{display:block;font-weight:500}
+  .row__meta{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;color:var(--muted);margin-top:4px}
+  .row__body{font-size:14.5px;line-height:1.8;word-break:break-word;white-space:pre-wrap}
+  .row__body em{font-style:normal;color:var(--muted);font-size:12px}
+  .del{border:1px solid var(--line);background:transparent;color:var(--muted);padding:6px 10px;font:10px/1 var(--mono);letter-spacing:.14em;cursor:pointer}
+  .del:hover{border-color:#a8432c;color:#a8432c}
+  .empty{color:var(--muted);font-size:13.5px;padding:26px 0}
+  .foot{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-top:50px}
+  [hidden]{display:none!important}
+  @media (max-width:760px){
+    main{padding:26px 18px 60px}
+    .stats{grid-template-columns:1fr 1fr}
+    .row{grid-template-columns:1fr;gap:8px}
+    .row__who{display:flex;align-items:baseline;gap:10px}
+    .row__who b{display:inline}
+    .row__meta{display:inline;margin:0}
+    .del{justify-self:start}
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar__in">
+    <a class="brand" href="/">
+      <span class="brand__mark">江</span>
+      <span>
+        <span class="brand__name">江雪凝</span>
+        <span class="brand__sub" style="display:block">Admin · 后台</span>
+      </span>
+    </a>
+    <span class="bar__sp"></span>
+    <button class="ghost" id="logout" hidden>退出</button>
+  </div>
+</header>
+
+<main>
+  <section id="loginView" class="login">
+    <p class="kicker">Private</p>
+    <h1>后台，<em>请进</em>。</h1>
+    <p>只有一件事：删留言、看有多少人来过。</p>
+    <label class="field">
+      <span>Password</span>
+      <input id="pw" type="password" autocomplete="current-password" placeholder="输入密码">
+    </label>
+    <button class="primary" id="enter">进入</button>
+    <p class="hint" id="loginHint"></p>
+  </section>
+
+  <section id="panel" hidden>
+    <p class="kicker">Dashboard · 概览</p>
+    <h1>最近<em>还好</em>。</h1>
+
+    <div class="stats">
+      <div class="stat"><small>总浏览</small><b id="sTotal">–</b></div>
+      <div class="stat"><small>今日</small><b id="sToday">–</b></div>
+      <div class="stat"><small>留言</small><b id="sComments">–</b></div>
+      <div class="stat"><small>近 14 天</small><div class="spark" id="spark"></div></div>
+    </div>
+
+    <div class="sec-head">
+      <span class="kicker">Comments · 留言</span>
+      <span class="kicker" id="listMeta"></span>
+    </div>
+    <ul class="list" id="rows"></ul>
+    <p class="empty" id="empty" hidden>还没有留言。</p>
+
+    <p class="foot">Data · Cloudflare D1 · xuenin-notes</p>
+  </section>
+</main>
+
+<script>
+(function(){
+  var API = 'https://xuenin-notes-api.pages.dev/api';
+  var TOKEN_KEY = 'xuenin-admin-token';
+  var $ = function(id){ return document.getElementById(id); };
+  var token = sessionStorage.getItem(TOKEN_KEY) || '';
+
+  function hint(msg, err){
+    var el = $('loginHint');
+    el.textContent = msg || '';
+    el.className = 'hint' + (err ? ' is-err' : '');
+  }
+
+  async function api(path, opts){
+    opts = opts || {};
+    var headers = { 'Content-Type': 'application/json' };
+    if (token) headers.Authorization = 'Bearer ' + token;
+    var r = await fetch(API + path, { method: opts.method || 'GET', headers: headers, body: opts.body });
+    var data = await r.json().catch(function(){ return {}; });
+    if (r.status === 401) { logout(); throw new Error('unauthorized'); }
+    if (!r.ok) throw new Error(data.error || ('http-' + r.status));
+    return data;
+  }
+
+  function ago(iso){
+    var t = new Date(iso).getTime();
+    if (!t) return '';
+    var d = Math.floor((Date.now() - t) / 1000);
+    if (d < 60) return '刚刚';
+    if (d < 3600) return Math.floor(d / 60) + ' 分钟前';
+    if (d < 86400) return Math.floor(d / 3600) + ' 小时前';
+    return Math.floor(d / 86400) + ' 天前';
+  }
+
+  function logout(){
+    token = '';
+    sessionStorage.removeItem(TOKEN_KEY);
+    $('panel').hidden = true;
+    $('loginView').hidden = false;
+    $('logout').hidden = true;
+  }
+
+  function spark(days){
+    var box = $('spark');
+    box.innerHTML = '';
+    var map = {};
+    (days || []).forEach(function(d){ map[d.day] = d.hits; });
+    var now = Date.now();
+    var arr = [];
+    for (var i = 13; i >= 0; i--) {
+      var key = new Date(now - i * 86400000).toISOString().slice(0, 10);
+      arr.push({ day: key, hits: map[key] || 0 });
+    }
+    var max = 1;
+    arr.forEach(function(x){ if (x.hits > max) max = x.hits; });
+    arr.forEach(function(x){
+      var bar = document.createElement('i');
+      bar.style.height = Math.max(2, Math.round(x.hits / max * 30)) + 'px';
+      if (!x.hits) bar.style.opacity = 0.16;
+      bar.title = x.day + ' · ' + x.hits;
+      box.appendChild(bar);
+    });
+  }
+
+  function renderComments(items){
+    var rows = $('rows');
+    rows.innerHTML = '';
+    $('empty').hidden = items.length > 0;
+    $('listMeta').textContent = items.length ? items.length + ' 条' : '';
+    items.forEach(function(c){
+      var li = document.createElement('li');
+      li.className = 'row';
+      var who = document.createElement('div');
+      who.className = 'row__who';
+      var b = document.createElement('b'); b.textContent = c.name || '匿名';
+      var meta = document.createElement('span'); meta.className = 'row__meta';
+      meta.textContent = ago(c.created_at) + ' · ' + (c.page || '/');
+      who.appendChild(b); who.appendChild(meta);
+
+      var body = document.createElement('div');
+      body.className = 'row__body';
+      body.textContent = c.body;
+
+      var del = document.createElement('button');
+      del.className = 'del';
+      del.textContent = '删除';
+      del.addEventListener('click', async function(){
+        if (!confirm('删掉这条留言？')) return;
+        del.disabled = true;
+        try {
+          await api('/admin/comments?id=' + c.id, { method: 'DELETE' });
+          li.remove();
+          load();
+        } catch (e) {
+          del.disabled = false;
+          alert('删除失败：' + e.message);
+        }
+      });
+
+      li.appendChild(who); li.appendChild(body); li.appendChild(del);
+      rows.appendChild(li);
+    });
+  }
+
+  async function load(){
+    try {
+      var res = await Promise.all([api('/admin/stats'), api('/admin/comments')]);
+      var s = res[0], c = res[1];
+      $('sTotal').textContent = s.total;
+      $('sToday').textContent = s.today;
+      $('sComments').textContent = s.comments;
+      spark(s.days || []);
+      renderComments(c.items || []);
+    } catch (e) {
+      if (e.message !== 'unauthorized') alert('加载失败：' + e.message);
+    }
+  }
+
+  async function enter(){
+    var pw = $('pw').value.trim();
+    if (!pw) { hint('先输入密码', true); return; }
+    $('enter').disabled = true;
+    hint('验证中…');
+    try {
+      var r = await fetch(API + '/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw }),
+      });
+      var d = await r.json().catch(function(){ return {}; });
+      if (!r.ok || !d.token) { hint(d.error === 'no-password' ? '服务端还没设密码' : '密码不对', true); return; }
+      token = d.token;
+      sessionStorage.setItem(TOKEN_KEY, token);
+      $('pw').value = '';
+      hint('');
+      $('loginView').hidden = true;
+      $('panel').hidden = false;
+      $('logout').hidden = false;
+      await load();
+    } catch (e) {
+      hint('连不上服务，检查网络', true);
+    } finally {
+      $('enter').disabled = false;
+    }
+  }
+
+  $('enter').addEventListener('click', enter);
+  $('pw').addEventListener('keydown', function(e){ if (e.key === 'Enter') enter(); });
+  $('logout').addEventListener('click', function(){ logout(); hint('已退出'); });
+
+  if (token) {
+    $('loginView').hidden = true;
+    $('panel').hidden = false;
+    $('logout').hidden = false;
+    load();
+  }
+})();
+</script>
+</body>
+</html>
