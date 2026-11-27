@@ -1541,5 +1541,19 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
   refresh();
 })();
 </script>
+<script>
+/* 浏览计数：只记次数，不存 IP、不写 cookie；?nohit=1 可跳过 */
+(function(){
+  try{
+    if(location.search.indexOf('nohit=1') > -1) return;
+    fetch('https://xuenin-notes-api.pages.dev/api/hit', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ page: location.pathname }),
+      keepalive: true
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
