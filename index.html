@@ -837,6 +837,18 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
   .notes__body{grid-template-columns:1fr;gap:36px}
   .notes__meta{font-size:9px}
 }
+/* 页脚 Demo 声明：一行，不打扰版式 */
+.foot{padding-bottom:34px}
+.foot__demo{flex:0 0 100%;display:flex;align-items:center;flex-wrap:wrap;gap:0 10px;margin:4px 0 0;
+  font-family:var(--sans);font-size:11px;letter-spacing:.02em;line-height:1.6;text-transform:none;color:var(--muted)}
+.foot__tag{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;padding:2px 6px 1px;
+  border:1px solid var(--line);color:var(--ink-2);text-transform:uppercase}
+.foot__demo a{margin-left:auto;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;
+  color:var(--ink-2);text-transform:uppercase;border-bottom:1px solid var(--line)}
+.foot__demo a:hover{color:var(--rust);border-color:var(--rust)}
+@media (max-width:860px){
+  .foot__demo a{margin-left:0}
+}
 </style>
 </head>
 <body>
@@ -1192,6 +1204,7 @@ body{background:var(--paper);color:var(--ink);font-size:15.5px}
       <span>© 2026 江雪凝 · DESIGNED BY HYL</span>
       <span>SHANGHAI · CHINA · <span id="clockFoot">--:--</span></span>
       <span>WINTER ARCHIVE · 2026</span>
+      <p class="foot__demo"><span class="foot__tag">Demo</span>江雪凝为虚构人物，图片由 AI 生成<a href="#notes">同款定制 →</a></p>
     </footer>
   </div>
 </main>
